@@ -510,7 +510,7 @@ function calcAll() {
   const mpl=rythme>0?60/rythme:0, tMin=charge+approche+(mpl*nbL*2), tH=tMin/60;
   set('c-tournee',tMin,0); set('rl-total',tH); set('rl-par',mpl,0); document.getElementById('rl-nb-display').textContent=nbL;
   const tp=totalS+totalD;
-  set('r-total',tp+tH); set('r-prepa',tp); set('r-liv',tH); document.getElementById('r-sacs').textContent=(nbS+nbD).toString();
+  set('r-total',tp+tH); set('r-prepa',tp); set('r-liv',tH);
 }
 
 function calcCouts() {
