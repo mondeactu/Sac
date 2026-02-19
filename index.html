@@ -185,7 +185,8 @@
 <!-- LOADING -->
 <div id="screen-loading" class="hidden">
   <div class="spinner"></div>
-  <div class="loading-text">Chargement de vos données...</div>
+  <div class="loading-text" id="loading-text">Chargement de vos données...</div>
+  <button id="retry-btn" onclick="retryBoot()" style="display:none; margin-top:16px; padding:10px 20px; background:#2563eb; color:white; border:none; border-radius:8px; font-family:Inter,sans-serif; font-size:14px; font-weight:600; cursor:pointer;">Réessayer</button>
 </div>
 
 <!-- APP -->
@@ -423,17 +424,40 @@ async function boot(prenom) {
 
   try {
     // Timeout de sécurité : si ça prend > 8s, on passe en mode hors ligne
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
+    // Après 5s, montrer le bouton réessayer
+    const retryTimer = setTimeout(() => {
+      const btn = document.getElementById('retry-btn');
+      const txt = document.getElementById('loading-text');
+      if (btn) btn.style.display = 'block';
+      if (txt) txt.textContent = 'Connexion lente...';
+    }, 5000);
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000));
 
     await Promise.race([connectUser(prenomKey), timeout]);
+    clearTimeout(retryTimer);
 
   } catch(e) {
+    clearTimeout(retryTimer);
     console.error('Boot error:', e);
     user = { id: null, prenom: prenomKey };
     calcAll(); calcCouts();
     setSyncError();
   }
   showApp();
+}
+
+function retryBoot() {
+  const prenom = localStorage.getItem('_prenom');
+  const btn = document.getElementById('retry-btn');
+  const txt = document.getElementById('loading-text');
+  if (btn) btn.style.display = 'none';
+  if (txt) txt.textContent = 'Chargement de vos données...';
+  if (prenom) boot(prenom);
+  else {
+    // Retourner à l'écran login
+    document.getElementById('screen-loading').classList.add('hidden');
+    document.getElementById('screen-login').classList.remove('hidden');
+  }
 }
 
 async function connectUser(prenomKey) {
@@ -543,9 +567,13 @@ async function changePrenom() {
 
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 
-// INIT
+// INIT - normaliser le prénom stocké (au cas où il y aurait une majuscule de l'ancienne version)
 const savedPrenom = localStorage.getItem('_prenom');
-if (savedPrenom) { boot(savedPrenom); }
+if (savedPrenom) {
+  const normalized = savedPrenom.trim().toLowerCase();
+  if (normalized !== savedPrenom) localStorage.setItem('_prenom', normalized);
+  boot(normalized);
+}
 </script>
 </body>
 </html>
