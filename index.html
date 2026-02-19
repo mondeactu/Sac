@@ -227,11 +227,11 @@
         <div class="card-header"><div class="card-title">🛍 Préparation</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs simples</div><div class="field-sub">Quantité à préparer</div></div>
-          <div class="field-right"><input type="number" id="f-s-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-s-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps par sac</div><div class="field-sub">En minutes</div></div>
-          <div class="field-right"><input type="number" id="f-s-min" value="10" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-s-min" value="10" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps / sac</div><div class="field-sub">Calculé auto</div></div>
@@ -242,19 +242,19 @@
         <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
-          <div class="field-right"><input type="number" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
-          <div class="field-right"><input type="number" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
-          <div class="field-right"><input type="number" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
-          <div class="field-right"><input type="number" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Durée tournée</div><div class="field-sub">Calculé auto</div></div>
@@ -278,11 +278,11 @@
         <div class="card-header"><div class="card-title">🛍🛍 Préparation</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs doubles</div><div class="field-sub">Quantité à préparer</div></div>
-          <div class="field-right"><input type="number" id="f-d-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-d-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps par sac double</div><div class="field-sub">En minutes</div></div>
-          <div class="field-right"><input type="number" id="f-d-min" value="15" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-d-min" value="15" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps / sac</div><div class="field-sub">Calculé auto</div></div>
@@ -293,19 +293,19 @@
         <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
-          <div class="field-right"><input type="number" id="f-l-nb-d" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-nb-d" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
-          <div class="field-right"><input type="number" id="f-l-charge-d" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-charge-d" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
-          <div class="field-right"><input type="number" id="f-l-approche-d" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-approche-d" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
-          <div class="field-right"><input type="number" id="f-l-rythme-d" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-rythme-d" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Durée tournée</div><div class="field-sub">Calculé auto</div></div>
@@ -329,28 +329,28 @@
         <div class="card-header"><div class="card-title">🚚 Livraison — Paramètres</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
-          <div class="field-right"><input type="number" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
-          <div class="field-right"><input type="number" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
-          <div class="field-right"><input type="number" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
-          <div class="field-right"><input type="number" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
         </div>
         <div class="section-label">Informations complémentaires</div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Coût trajet (Michelin)</div></div>
-          <div class="field-right"><input type="number" id="f-l-michelin" value="0" min="0" step="0.01" oninput="autoSave('livraison')"><div class="field-unit">€</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-michelin" value="0" min="0" step="0.01" oninput="autoSave('livraison')"><div class="field-unit">€</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Taux d'attribution</div></div>
-          <div class="field-right"><input type="number" id="f-l-taux" value="0" min="0" max="100" oninput="autoSave('livraison')"><div class="field-unit">%</div></div>
+          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-taux" value="0" min="0" max="100" oninput="autoSave('livraison')"><div class="field-unit">%</div></div>
         </div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Véhicule</div></div>
@@ -373,34 +373,34 @@
 
       <div class="card">
         <div class="card-header"><div class="card-title">👷 Main d'œuvre — Préparation</div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Préparateur</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-prep" value="6.75" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-enc-p" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Remplacement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-remp" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Dépréciation plateforme</div></div><div class="field-right"><input type="number" id="c-depr" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Préparateur</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-prep" value="6.75" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-enc-p" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Remplacement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-remp" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Dépréciation plateforme</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-depr" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
       </div>
 
       <div class="card">
         <div class="card-header"><div class="card-title">🚛 Tournée Saveurs & Vie</div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Loyer véhicule frigorifique</div></div><div class="field-right"><input type="number" id="c-loyer" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Réparation véhicule</div></div><div class="field-right"><input type="number" id="c-rep" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Gasoil & péage</div></div><div class="field-right"><input type="number" id="c-gas" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Périmètre de livraison</div></div><div class="field-right"><input type="number" id="c-perim" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Téléphone</div></div><div class="field-right"><input type="number" id="c-tel" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Chauffeur</div></div><div class="field-right"><input type="number" id="c-chauf" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement transport</div></div><div class="field-right"><input type="number" id="c-enc-t" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Loyer véhicule frigorifique</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-loyer" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Réparation véhicule</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-rep" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Gasoil & péage</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-gas" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Périmètre de livraison</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-perim" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Téléphone</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-tel" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Chauffeur</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-chauf" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement transport</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-enc-t" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
       </div>
 
       <div class="card">
         <div class="card-header"><div class="card-title">📦 Livraison région STG</div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Navette STG</div></div><div class="field-right"><input type="number" id="c-nav" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Palette</div></div><div class="field-right"><input type="number" id="c-pal" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Carton</div></div><div class="field-right"><input type="number" id="c-car" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Navette STG</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-nav" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Palette</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-pal" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Carton</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-car" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
       </div>
 
       <div class="card">
         <div class="card-header"><div class="card-title">📮 Livraison La Poste</div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Forfait par repas</div></div><div class="field-right"><input type="number" id="c-forf-r" value="1" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
-        <div class="field-row"><div class="field-left"><div class="field-label">Forfait point unique</div></div><div class="field-right"><input type="number" id="c-forf-u" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Forfait par repas</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-forf-r" value="1" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Forfait point unique</div></div><div class="field-right"><input type="number" inputmode="decimal" id="c-forf-u" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
       </div>
     </div>
   </main>
