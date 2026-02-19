@@ -66,12 +66,48 @@
     .sync-dot.saving { background: var(--orange); animation: blink 0.6s infinite; }
     .sync-dot.error { background: var(--red); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    .tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 0 16px 12px; gap: 8px; }
-    .tab-btn { padding: 9px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-    .tab-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 4px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.15s;
+      gap: 4px;
+    }
+    .tab-btn .tab-icon { font-size: 20px; line-height: 1; }
+    .tab-btn.active { color: var(--accent); }
+    .tab-btn.active .tab-icon-bar {
+      position: absolute;
+      top: 0;
+      width: 32px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 0 0 3px 3px;
+    }
 
     /* MAIN */
-    main { padding: 16px; padding-bottom: 48px; max-width: 600px; margin: 0 auto; }
+    main { padding: 16px; padding-bottom: 90px; max-width: 600px; margin: 0 auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
@@ -175,24 +211,19 @@
   </div>
 
   <main>
-    <!-- PRÉPA -->
-    <div class="tab-content active" id="tab-prepa">
+    <!-- SAC SIMPLE -->
+    <div class="tab-content active" id="tab-simple">
       <div class="card">
-        <div class="card-header"><div class="card-title">📊 Récapitulatif global</div><div class="card-badge">Calculé auto</div></div>
+        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
         <div class="recap-grid">
-          <div class="recap-cell"><div class="recap-label">Prépa + Livraison</div><div class="recap-value blue" id="r-total">—</div><div class="recap-unit">heures au total</div></div>
-          <div class="recap-cell"><div class="recap-label">Sacs à traiter</div><div class="recap-value" id="r-sacs">—</div><div class="recap-unit">sacs (simple + double)</div></div>
-          <div class="recap-cell"><div class="recap-label">Prépa seule</div><div class="recap-value green" id="r-prepa">—</div><div class="recap-unit">heures</div></div>
-          <div class="recap-cell"><div class="recap-label">Livraison seule</div><div class="recap-value orange" id="r-liv">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Total prépa</div><div class="recap-value blue" id="rs-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Par sac</div><div class="recap-value green" id="rs-par">—</div><div class="recap-unit">heure / sac</div></div>
+          <div class="recap-cell"><div class="recap-label">Nombre de sacs</div><div class="recap-value" id="rs-nb-display">—</div><div class="recap-unit">sacs simples</div></div>
+          <div class="recap-cell"><div class="recap-label">Temps / sac</div><div class="recap-value orange" id="c-s-h">—</div><div class="recap-unit">h / sac</div></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-header"><div class="card-title">🛍 Sac simple</div></div>
-        <div class="result-row">
-          <div class="result-cell"><div class="result-label">Total</div><div class="result-value" id="rs-total">—</div><div class="result-sub" id="rs-sub">—</div></div>
-          <div class="result-cell"><div class="result-label">Par sac</div><div class="result-value" id="rs-par">—</div><div class="result-sub">heure / sac</div></div>
-        </div>
+        <div class="card-header"><div class="card-title">🛍 Sac simple — Paramètres</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs simples</div><div class="field-sub">Quantité à préparer</div></div>
           <div class="field-right"><input type="number" id="f-s-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
@@ -201,18 +232,22 @@
           <div class="field-left"><div class="field-label">Temps par sac</div><div class="field-sub">En minutes</div></div>
           <div class="field-right"><input type="number" id="f-s-min" value="10" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
         </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Temps / sac en heures</div><div class="field-sub">Calculé automatiquement</div></div>
-          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-s-h">—</div><div class="calc-unit">h / sac</div></div></div>
+      </div>
+    </div>
+
+    <!-- SAC DOUBLE -->
+    <div class="tab-content" id="tab-double">
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
+        <div class="recap-grid">
+          <div class="recap-cell"><div class="recap-label">Total prépa</div><div class="recap-value blue" id="rd-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Par sac</div><div class="recap-value green" id="rd-par">—</div><div class="recap-unit">heure / sac</div></div>
+          <div class="recap-cell"><div class="recap-label">Nombre de sacs</div><div class="recap-value" id="rd-nb-display">—</div><div class="recap-unit">sacs doubles</div></div>
+          <div class="recap-cell"><div class="recap-label">Temps / sac</div><div class="recap-value orange" id="c-d-h">—</div><div class="recap-unit">h / sac</div></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-header"><div class="card-title">🛍🛍 Sac double</div></div>
-        <div class="result-row">
-          <div class="result-cell"><div class="result-label">Total</div><div class="result-value" id="rd-total">—</div><div class="result-sub" id="rd-sub">—</div></div>
-          <div class="result-cell"><div class="result-label">Par sac</div><div class="result-value" id="rd-par">—</div><div class="result-sub">heure / sac</div></div>
-        </div>
+        <div class="card-header"><div class="card-title">🛍🛍 Sac double — Paramètres</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs doubles</div><div class="field-sub">Quantité à préparer</div></div>
           <div class="field-right"><input type="number" id="f-d-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
@@ -221,18 +256,22 @@
           <div class="field-left"><div class="field-label">Temps par sac double</div><div class="field-sub">En minutes</div></div>
           <div class="field-right"><input type="number" id="f-d-min" value="15" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
         </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Temps / sac en heures</div><div class="field-sub">Calculé automatiquement</div></div>
-          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-d-h">—</div><div class="calc-unit">h / sac</div></div></div>
+      </div>
+    </div>
+
+    <!-- LIVRAISON -->
+    <div class="tab-content" id="tab-livraison">
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
+        <div class="recap-grid">
+          <div class="recap-cell"><div class="recap-label">Durée tournée</div><div class="recap-value blue" id="rl-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Par livraison</div><div class="recap-value orange" id="rl-par">—</div><div class="recap-unit">minutes</div></div>
+          <div class="recap-cell"><div class="recap-label">Sacs livrés</div><div class="recap-value" id="rl-nb-display">—</div><div class="recap-unit">sacs</div></div>
+          <div class="recap-cell"><div class="recap-label">Temps tournée</div><div class="recap-value green" id="c-tournee">—</div><div class="recap-unit">minutes</div></div>
         </div>
       </div>
-
       <div class="card">
-        <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
-        <div class="result-row">
-          <div class="result-cell"><div class="result-label">Durée tournée</div><div class="result-value" id="rl-total">—</div><div class="result-sub" id="rl-sub">—</div></div>
-          <div class="result-cell"><div class="result-label">Par livraison</div><div class="result-value" id="rl-par">—</div><div class="result-sub">minutes</div></div>
-        </div>
+        <div class="card-header"><div class="card-title">🚚 Livraison — Paramètres</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
           <div class="field-right"><input type="number" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
@@ -248,10 +287,6 @@
         <div class="field-row">
           <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
           <div class="field-right"><input type="number" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Temps tournée totale</div><div class="field-sub">Calculé automatiquement</div></div>
-          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-tournee">—</div><div class="calc-unit">min</div></div></div>
         </div>
         <div class="section-label">Informations complémentaires</div>
         <div class="field-row">
@@ -314,6 +349,25 @@
       </div>
     </div>
   </main>
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="tab-btn active" id="btn-simple" onclick="switchTab('simple',this)">
+      <span class="tab-icon">🛍</span>
+      Sac simple
+    </button>
+    <button class="tab-btn" id="btn-double" onclick="switchTab('double',this)">
+      <span class="tab-icon">🛍🛍</span>
+      Sac double
+    </button>
+    <button class="tab-btn" id="btn-livraison" onclick="switchTab('livraison',this)">
+      <span class="tab-icon">🚚</span>
+      Livraison
+    </button>
+    <button class="tab-btn" id="btn-couts" onclick="switchTab('couts',this)">
+      <span class="tab-icon">💶</span>
+      Coûts
+    </button>
+  </nav>
 </div>
 
 <!-- MODAL -->
@@ -395,7 +449,7 @@ function showApp() {
 }
 
 function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav .tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
@@ -413,11 +467,11 @@ function calcAll() {
   const nbS=v('f-s-nb'), minS=v('f-s-min'), nbD=v('f-d-nb'), minD=v('f-d-min');
   const nbL=v('f-l-nb'), charge=v('f-l-charge'), approche=v('f-l-approche'), rythme=v('f-l-rythme');
   const hS=minS/60, totalS=hS*nbS;
-  set('c-s-h',hS,3); set('rs-total',totalS); document.getElementById('rs-sub').textContent=`${nbS} × ${fmt(hS,3)} h`; set('rs-par',hS,3);
+  set('c-s-h',hS,3); set('rs-total',totalS); set('rs-par',hS,3); document.getElementById('rs-nb-display').textContent=nbS;
   const hD=minD/60, totalD=hD*nbD;
-  set('c-d-h',hD,3); set('rd-total',totalD); document.getElementById('rd-sub').textContent=`${nbD} × ${fmt(hD,3)} h`; set('rd-par',hD,3);
+  set('c-d-h',hD,3); set('rd-total',totalD); set('rd-par',hD,3); document.getElementById('rd-nb-display').textContent=nbD;
   const mpl=rythme>0?60/rythme:0, tMin=charge+approche+(mpl*nbL*2), tH=tMin/60;
-  set('c-tournee',tMin,0); set('rl-total',tH); document.getElementById('rl-sub').textContent=`${nbL} sacs à ${rythme}/h`; set('rl-par',mpl,0);
+  set('c-tournee',tMin,0); set('rl-total',tH); set('rl-par',mpl,0); document.getElementById('rl-nb-display').textContent=nbL;
   const tp=totalS+totalD;
   set('r-total',tp+tH); set('r-prepa',tp); set('r-liv',tH); document.getElementById('r-sacs').textContent=(nbS+nbD).toString();
 }
