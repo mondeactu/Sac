@@ -37,7 +37,7 @@
 
     /* LOGIN */
     #screen-login { position: fixed; inset: 0; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; z-index: 300; transition: opacity 0.3s; }
-    #screen-login.hidden { opacity: 0; pointer-events: none; }
+    #screen-login.hidden { opacity: 0; pointer-events: none; display: none !important; }
     .login-logo { width: 72px; height: 72px; background: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 28px; }
     .login-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
     .login-sub { font-size: 14px; color: var(--text-muted); text-align: center; margin-bottom: 40px; line-height: 1.6; max-width: 280px; }
@@ -49,7 +49,7 @@
 
     /* LOADING */
     #screen-loading { position: fixed; inset: 0; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 14px; transition: opacity 0.3s; }
-    #screen-loading.hidden { opacity: 0; pointer-events: none; }
+    #screen-loading.hidden { opacity: 0; pointer-events: none; display: none !important; }
     .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: 13px; color: var(--text-muted); }
@@ -413,26 +413,22 @@ async function handleLogin() {
 document.getElementById('login-prenom').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
 
 async function boot(prenom) {
+  const prenomKey = prenom.trim().toLowerCase();
+  if (!prenomKey) return;
+
+  // Afficher loading, cacher login
   document.getElementById('screen-login').classList.add('hidden');
   document.getElementById('screen-loading').classList.remove('hidden');
-  // Normaliser : minuscules + sans espaces
-  const prenomKey = prenom.trim().toLowerCase();
+  document.getElementById('screen-app').style.display = 'none';
+
   try {
-    // Chercher par prénom (identifiant unique)
-    let users = await sb(`users?prenom=eq.${encodeURIComponent(prenomKey)}&select=*`);
-    if (users?.length) {
-      // Utilisateur existant — même prénom = mêmes données
-      user = users[0];
-    } else {
-      // Nouvel utilisateur
-      const res = await sb('users', { method:'POST', body: JSON.stringify({ prenom: prenomKey }) });
-      user = res[0];
-      await sb('preparation', { method:'POST', body: JSON.stringify({user_id: user.id}) });
-      await sb('livraison', { method:'POST', body: JSON.stringify({user_id: user.id}) });
-      await sb('couts', { method:'POST', body: JSON.stringify({user_id: user.id}) });
-    }
-    await loadData();
+    // Timeout de sécurité : si ça prend > 8s, on passe en mode hors ligne
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000));
+
+    await Promise.race([connectUser(prenomKey), timeout]);
+
   } catch(e) {
+    console.error('Boot error:', e);
     user = { id: null, prenom: prenomKey };
     calcAll(); calcCouts();
     setSyncError();
@@ -440,8 +436,25 @@ async function boot(prenom) {
   showApp();
 }
 
+async function connectUser(prenomKey) {
+  let users = await sb(`users?prenom=eq.${encodeURIComponent(prenomKey)}&select=*`);
+  if (users?.length) {
+    user = users[0];
+  } else {
+    const res = await sb('users', { method:'POST', body: JSON.stringify({ prenom: prenomKey }) });
+    user = res[0];
+    await Promise.all([
+      sb('preparation', { method:'POST', body: JSON.stringify({user_id: user.id}) }),
+      sb('livraison',   { method:'POST', body: JSON.stringify({user_id: user.id}) }),
+      sb('couts',       { method:'POST', body: JSON.stringify({user_id: user.id}) })
+    ]);
+  }
+  await loadData();
+}
+
 function showApp() {
   document.getElementById('screen-loading').classList.add('hidden');
+  document.getElementById('screen-login').classList.add('hidden');
   document.getElementById('screen-app').style.display = 'block';
   document.getElementById('avatar-btn').textContent = user.prenom.charAt(0).toUpperCase();
   document.getElementById('header-name').textContent = 'Prépa & Livraison';
