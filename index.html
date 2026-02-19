@@ -314,51 +314,6 @@
       </div>
     </div>
 
-    <!-- LIVRAISON -->
-    <div class="tab-content" id="tab-livraison">
-      <div class="card">
-        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
-        <div class="recap-grid">
-          <div class="recap-cell"><div class="recap-label">Durée tournée</div><div class="recap-value blue" id="rl-total">—</div><div class="recap-unit">heures</div></div>
-          <div class="recap-cell"><div class="recap-label">Par livraison</div><div class="recap-value orange" id="rl-par">—</div><div class="recap-unit">minutes</div></div>
-          <div class="recap-cell"><div class="recap-label">Sacs livrés</div><div class="recap-value" id="rl-nb-display">—</div><div class="recap-unit">sacs</div></div>
-          <div class="recap-cell"><div class="recap-label">Temps tournée</div><div class="recap-value green" id="c-tournee">—</div><div class="recap-unit">minutes</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">🚚 Livraison — Paramètres</div></div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
-        </div>
-        <div class="section-label">Informations complémentaires</div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Coût trajet (Michelin)</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-michelin" value="0" min="0" step="0.01" oninput="autoSave('livraison')"><div class="field-unit">€</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Taux d'attribution</div></div>
-          <div class="field-right"><input type="number" inputmode="decimal" id="f-l-taux" value="0" min="0" max="100" oninput="autoSave('livraison')"><div class="field-unit">%</div></div>
-        </div>
-        <div class="field-row">
-          <div class="field-left"><div class="field-label">Véhicule</div></div>
-          <div class="field-right"><select id="f-l-vehicule" onchange="autoSave('livraison')"><option value="existant">Existant</option><option value="nouveau">Nouveau</option></select></div>
-        </div>
-      </div>
-    </div>
-
     <!-- COÛTS -->
     <div class="tab-content" id="tab-couts">
       <div class="card">
@@ -551,16 +506,37 @@ function fmt(n,d=2) { return isNaN(n)?'—':n.toFixed(d); }
 function set(id, val, d=2) { const el=document.getElementById(id); if(el) el.textContent=(val===null||isNaN(val))?'—':(d===0?Math.round(val).toString():val.toFixed(d)); }
 
 function calcAll() {
-  const nbS=v('f-s-nb'), minS=v('f-s-min'), nbD=v('f-d-nb'), minD=v('f-d-min');
-  const nbL=v('f-l-nb'), charge=v('f-l-charge'), approche=v('f-l-approche'), rythme=v('f-l-rythme');
-  const hS=minS/60, totalS=hS*nbS;
-  set('c-s-h',hS,3); set('rs-total',totalS); set('rs-par',hS,3); document.getElementById('rs-nb-display').textContent=nbS;
-  const hD=minD/60, totalD=hD*nbD;
-  set('c-d-h',hD,3); set('rd-total',totalD); set('rd-par',hD,3); document.getElementById('rd-nb-display').textContent=nbD;
-  const mpl=rythme>0?60/rythme:0, tMin=charge+approche+(mpl*nbL*2), tH=tMin/60;
-  set('c-tournee',tMin,0); set('rl-total',tH); set('rl-par',mpl,0); document.getElementById('rl-nb-display').textContent=nbL;
-  const tp=totalS+totalD;
-  set('r-total',tp+tH); set('r-prepa',tp); set('r-liv',tH);
+  // === SAC SIMPLE ===
+  const nbS = v('f-s-nb'), minS = v('f-s-min');
+  const hS = minS / 60;                          // h/sac
+  const totalPrepS = hS * nbS;                   // h prépa total
+  set('c-s-h', hS, 3);
+  set('rs-total', totalPrepS);
+  document.getElementById('rs-nb-display').textContent = nbS;
+
+  // Livraison sac simple : formule Excel = charge + approche + (nb/rythme × 60 × 2)
+  const nbLS = v('f-l-nb'), chargeS = v('f-l-charge'), approcheS = v('f-l-approche'), rythmeS = v('f-l-rythme');
+  const dureeMinS = chargeS + approcheS + (rythmeS > 0 ? (nbLS / rythmeS) * 60 * 2 : 0);
+  const dureeHS = dureeMinS / 60;
+  set('c-tournee-s', dureeMinS, 0);
+  set('rs-liv-total', dureeHS);
+  set('rs-grand-total', totalPrepS + dureeHS);
+
+  // === SAC DOUBLE ===
+  const nbD = v('f-d-nb'), minD = v('f-d-min');
+  const hD = minD / 60;                          // h/sac
+  const totalPrepD = hD * nbD;                   // h prépa total
+  set('c-d-h', hD, 3);
+  set('rd-total', totalPrepD);
+  document.getElementById('rd-nb-display').textContent = nbD;
+
+  // Livraison sac double : même formule avec ses propres paramètres
+  const nbLD = v('f-l-nb-d'), chargeD = v('f-l-charge-d'), approcheD = v('f-l-approche-d'), rythmeD = v('f-l-rythme-d');
+  const dureeMinD = chargeD + approcheD + (rythmeD > 0 ? (nbLD / rythmeD) * 60 * 2 : 0);
+  const dureeHD = dureeMinD / 60;
+  set('c-tournee-d', dureeMinD, 0);
+  set('rd-liv-total', dureeHD);
+  set('rd-grand-total', totalPrepD + dureeHD);
 }
 
 function calcCouts() {
