@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Prépa & Livraison">
+  <meta name="theme-color" content="#ffffff">
+  <title>Prépa & Livraison</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --white: #ffffff;
+      --border: #e8eaed;
+      --border-light: #f0f2f5;
+      --text: #1a1d23;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --accent-border: #bfdbfe;
+      --green: #059669;
+      --green-light: #ecfdf5;
+      --orange: #d97706;
+      --red: #dc2626;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; min-height: 100vh; }
+
+    /* LOGIN */
+    #screen-login { position: fixed; inset: 0; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; z-index: 300; transition: opacity 0.3s; }
+    #screen-login.hidden { opacity: 0; pointer-events: none; }
+    .login-logo { width: 72px; height: 72px; background: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 28px; }
+    .login-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .login-sub { font-size: 14px; color: var(--text-muted); text-align: center; margin-bottom: 40px; line-height: 1.6; max-width: 280px; }
+    .login-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; align-self: flex-start; width: 100%; max-width: 320px; }
+    .login-input { width: 100%; max-width: 320px; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: var(--text); outline: none; transition: border-color 0.2s; margin-bottom: 16px; }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn { width: 100%; max-width: 320px; padding: 15px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .login-btn:active { background: #1d4ed8; }
+
+    /* LOADING */
+    #screen-loading { position: fixed; inset: 0; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; gap: 14px; transition: opacity 0.3s; }
+    #screen-loading.hidden { opacity: 0; pointer-events: none; }
+    .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 13px; color: var(--text-muted); }
+
+    /* HEADER */
+    .header { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-avatar { width: 34px; height: 34px; background: var(--accent-light); border: 2px solid var(--accent-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .header-name { font-size: 15px; font-weight: 700; }
+    .header-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .sync-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); background: var(--bg); padding: 5px 10px; border-radius: 20px; border: 1px solid var(--border); }
+    .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .sync-dot.saving { background: var(--orange); animation: blink 0.6s infinite; }
+    .sync-dot.error { background: var(--red); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 0 16px 12px; gap: 8px; }
+    .tab-btn { padding: 9px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .tab-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+    /* MAIN */
+    main { padding: 16px; padding-bottom: 48px; max-width: 600px; margin: 0 auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* CARDS */
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
+    .card-title { font-size: 13px; font-weight: 700; color: var(--text); }
+    .card-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+
+    /* RECAP GRID */
+    .recap-grid { display: grid; grid-template-columns: 1fr 1fr; }
+    .recap-cell { padding: 16px; border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); }
+    .recap-cell:nth-child(2n) { border-right: none; }
+    .recap-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .recap-label { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+    .recap-value { font-size: 26px; font-weight: 700; line-height: 1; }
+    .recap-value.blue { color: var(--accent); }
+    .recap-value.green { color: var(--green); }
+    .recap-value.orange { color: var(--orange); }
+    .recap-unit { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* RESULT ROW */
+    .result-row { display: grid; grid-template-columns: 1fr 1fr; background: var(--accent-light); border-bottom: 1px solid var(--accent-border); }
+    .result-cell { padding: 14px 16px; border-right: 1px solid var(--accent-border); }
+    .result-cell:last-child { border-right: none; }
+    .result-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 4px; }
+    .result-value { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .result-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* FIELDS */
+    .field-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-light); }
+    .field-row:last-child { border-bottom: none; }
+    .field-row:active { background: var(--bg); }
+    .field-left { flex: 1; min-width: 0; margin-right: 12px; }
+    .field-label { font-size: 13px; font-weight: 500; color: var(--text); }
+    .field-sub { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+    .field-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    input[type="number"] { width: 86px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); text-align: right; outline: none; background: var(--white); -webkit-appearance: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    input[type="number"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .field-unit { font-size: 12px; color: var(--text-muted); font-weight: 500; min-width: 28px; }
+    .calc-box { text-align: right; }
+    .calc-value { font-size: 15px; font-weight: 700; color: var(--accent); }
+    .calc-unit { font-size: 11px; color: var(--text-muted); }
+    select { padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); background: var(--white); outline: none; -webkit-appearance: none; width: 110px; }
+    .section-label { padding: 10px 16px 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); border-bottom: 1px solid var(--border-light); }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 400; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal { background: var(--white); width: 100%; border-radius: 20px 20px 0 0; padding: 20px 20px 44px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    .modal-overlay.show .modal { transform: translateY(0); }
+    .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .modal-input { width: 100%; padding: 13px 14px; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; outline: none; margin-bottom: 12px; }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-btn { width: 100%; padding: 13px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1d23; color: white; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 24px; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ÉCRAN PRÉNOM -->
+<div id="screen-login">
+  <div class="login-logo">📦</div>
+  <div class="login-title">Prépa & Livraison</div>
+  <div class="login-sub">Entrez votre prénom pour accéder à votre espace personnel. Il sera mémorisé sur cet appareil.</div>
+  <div class="login-label">Votre prénom</div>
+  <input class="login-input" type="text" id="login-prenom" placeholder="Ex : Marie" autocomplete="given-name" autocapitalize="words">
+  <button class="login-btn" onclick="handleLogin()">Accéder à mon espace →</button>
+</div>
+
+<!-- LOADING -->
+<div id="screen-loading" class="hidden">
+  <div class="spinner"></div>
+  <div class="loading-text">Chargement de vos données...</div>
+</div>
+
+<!-- APP -->
+<div id="screen-app" style="display:none">
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="header-avatar" id="avatar-btn" onclick="openModal()">?</div>
+        <div>
+          <div class="header-name" id="header-name">Prépa & Livraison</div>
+          <div class="header-sub" id="header-sub">Chargement...</div>
+        </div>
+      </div>
+      <div class="sync-badge">
+        <div class="sync-dot" id="sync-dot"></div>
+        <span id="sync-label">Synchro</span>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('prepa',this)">⏱ Temps prépa</button>
+      <button class="tab-btn" onclick="switchTab('couts',this)">💶 Coûts</button>
+    </div>
+  </div>
+
+  <main>
+    <!-- PRÉPA -->
+    <div class="tab-content active" id="tab-prepa">
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 Récapitulatif global</div><div class="card-badge">Calculé auto</div></div>
+        <div class="recap-grid">
+          <div class="recap-cell"><div class="recap-label">Prépa + Livraison</div><div class="recap-value blue" id="r-total">—</div><div class="recap-unit">heures au total</div></div>
+          <div class="recap-cell"><div class="recap-label">Sacs à traiter</div><div class="recap-value" id="r-sacs">—</div><div class="recap-unit">sacs (simple + double)</div></div>
+          <div class="recap-cell"><div class="recap-label">Prépa seule</div><div class="recap-value green" id="r-prepa">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Livraison seule</div><div class="recap-value orange" id="r-liv">—</div><div class="recap-unit">heures</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">🛍 Sac simple</div></div>
+        <div class="result-row">
+          <div class="result-cell"><div class="result-label">Total</div><div class="result-value" id="rs-total">—</div><div class="result-sub" id="rs-sub">—</div></div>
+          <div class="result-cell"><div class="result-label">Par sac</div><div class="result-value" id="rs-par">—</div><div class="result-sub">heure / sac</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Nombre de sacs simples</div><div class="field-sub">Quantité à préparer</div></div>
+          <div class="field-right"><input type="number" id="f-s-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps par sac</div><div class="field-sub">En minutes</div></div>
+          <div class="field-right"><input type="number" id="f-s-min" value="10" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps / sac en heures</div><div class="field-sub">Calculé automatiquement</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-s-h">—</div><div class="calc-unit">h / sac</div></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">🛍🛍 Sac double</div></div>
+        <div class="result-row">
+          <div class="result-cell"><div class="result-label">Total</div><div class="result-value" id="rd-total">—</div><div class="result-sub" id="rd-sub">—</div></div>
+          <div class="result-cell"><div class="result-label">Par sac</div><div class="result-value" id="rd-par">—</div><div class="result-sub">heure / sac</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Nombre de sacs doubles</div><div class="field-sub">Quantité à préparer</div></div>
+          <div class="field-right"><input type="number" id="f-d-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps par sac double</div><div class="field-sub">En minutes</div></div>
+          <div class="field-right"><input type="number" id="f-d-min" value="15" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps / sac en heures</div><div class="field-sub">Calculé automatiquement</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-d-h">—</div><div class="calc-unit">h / sac</div></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
+        <div class="result-row">
+          <div class="result-cell"><div class="result-label">Durée tournée</div><div class="result-value" id="rl-total">—</div><div class="result-sub" id="rl-sub">—</div></div>
+          <div class="result-cell"><div class="result-label">Par livraison</div><div class="result-value" id="rl-par">—</div><div class="result-sub">minutes</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
+          <div class="field-right"><input type="number" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
+          <div class="field-right"><input type="number" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
+          <div class="field-right"><input type="number" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
+          <div class="field-right"><input type="number" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps tournée totale</div><div class="field-sub">Calculé automatiquement</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-tournee">—</div><div class="calc-unit">min</div></div></div>
+        </div>
+        <div class="section-label">Informations complémentaires</div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Coût trajet (Michelin)</div></div>
+          <div class="field-right"><input type="number" id="f-l-michelin" value="0" min="0" step="0.01" oninput="autoSave('livraison')"><div class="field-unit">€</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Taux d'attribution</div></div>
+          <div class="field-right"><input type="number" id="f-l-taux" value="0" min="0" max="100" oninput="autoSave('livraison')"><div class="field-unit">%</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Véhicule</div></div>
+          <div class="field-right"><select id="f-l-vehicule" onchange="autoSave('livraison')"><option value="existant">Existant</option><option value="nouveau">Nouveau</option></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COÛTS -->
+    <div class="tab-content" id="tab-couts">
+      <div class="card">
+        <div class="card-header"><div class="card-title">📊 Total des coûts</div><div class="card-badge">Par formule</div></div>
+        <div class="recap-grid">
+          <div class="recap-cell"><div class="recap-label">Main d'œuvre prépa</div><div class="recap-value blue" id="rc-prepa">—</div><div class="recap-unit">h / semaine</div></div>
+          <div class="recap-cell"><div class="recap-label">Transport total</div><div class="recap-value orange" id="rc-transport">—</div><div class="recap-unit">€</div></div>
+          <div class="recap-cell"><div class="recap-label">Coût global</div><div class="recap-value green" id="rc-global">—</div><div class="recap-unit">€</div></div>
+          <div class="recap-cell"><div class="recap-label">Forfait repas (Poste)</div><div class="recap-value" id="rc-poste">—</div><div class="recap-unit">€ / repas</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">👷 Main d'œuvre — Préparation</div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Préparateur</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-prep" value="6.75" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-enc-p" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Remplacement</div><div class="field-sub">Qté horaire / semaine</div></div><div class="field-right"><input type="number" id="c-remp" value="0" min="0" step="0.25" oninput="calcCouts();autoSave('couts')"><div class="field-unit">h/sem</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Dépréciation plateforme</div></div><div class="field-right"><input type="number" id="c-depr" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚛 Tournée Saveurs & Vie</div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Loyer véhicule frigorifique</div></div><div class="field-right"><input type="number" id="c-loyer" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Réparation véhicule</div></div><div class="field-right"><input type="number" id="c-rep" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Gasoil & péage</div></div><div class="field-right"><input type="number" id="c-gas" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Périmètre de livraison</div></div><div class="field-right"><input type="number" id="c-perim" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Téléphone</div></div><div class="field-right"><input type="number" id="c-tel" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Chauffeur</div></div><div class="field-right"><input type="number" id="c-chauf" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Encadrement transport</div></div><div class="field-right"><input type="number" id="c-enc-t" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">📦 Livraison région STG</div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Navette STG</div></div><div class="field-right"><input type="number" id="c-nav" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Palette</div></div><div class="field-right"><input type="number" id="c-pal" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Carton</div></div><div class="field-right"><input type="number" id="c-car" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">📮 Livraison La Poste</div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Forfait par repas</div></div><div class="field-right"><input type="number" id="c-forf-r" value="1" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+        <div class="field-row"><div class="field-left"><div class="field-label">Forfait point unique</div></div><div class="field-right"><input type="number" id="c-forf-u" value="0" min="0" step="0.01" oninput="calcCouts();autoSave('couts')"><div class="field-unit">€</div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Changer de prénom</div>
+    <input class="modal-input" type="text" id="modal-prenom" placeholder="Nouveau prénom" autocapitalize="words">
+    <button class="modal-btn" onclick="changePrenom()">Confirmer</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://koxdlwabbkvlypsovjos.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtveGRsd2FiYmt2bHlwc292am9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NTg1NjgsImV4cCI6MjA4NzAzNDU2OH0.1JZlqqPfT4y1Cw65czTTwvhn2N3oUPGvw89EHAxEjKE';
+const H = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
+async function sb(path, opts={}) {
+  const r = await fetch(`${SB_URL}/rest/v1/${path}`, { headers: H, ...opts });
+  if (r.status === 204) return null;
+  const d = await r.json();
+  if (!r.ok) throw new Error(JSON.stringify(d));
+  return d;
+}
+
+let user = null;
+let timers = {};
+
+function getDeviceId() {
+  let id = localStorage.getItem('_did');
+  if (!id) { id = 'dev_' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('_did', id); }
+  return id;
+}
+
+async function handleLogin() {
+  const p = document.getElementById('login-prenom').value.trim();
+  if (!p) return document.getElementById('login-prenom').focus();
+  localStorage.setItem('_prenom', p);
+  await boot(p);
+}
+document.getElementById('login-prenom').addEventListener('keydown', e => { if(e.key==='Enter') handleLogin(); });
+
+async function boot(prenom) {
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('screen-loading').classList.remove('hidden');
+  // Normaliser : minuscules + sans espaces
+  const prenomKey = prenom.trim().toLowerCase();
+  try {
+    // Chercher par prénom (identifiant unique)
+    let users = await sb(`users?prenom=eq.${encodeURIComponent(prenomKey)}&select=*`);
+    if (users?.length) {
+      // Utilisateur existant — même prénom = mêmes données
+      user = users[0];
+    } else {
+      // Nouvel utilisateur
+      const res = await sb('users', { method:'POST', body: JSON.stringify({ prenom: prenomKey }) });
+      user = res[0];
+      await sb('preparation', { method:'POST', body: JSON.stringify({user_id: user.id}) });
+      await sb('livraison', { method:'POST', body: JSON.stringify({user_id: user.id}) });
+      await sb('couts', { method:'POST', body: JSON.stringify({user_id: user.id}) });
+    }
+    await loadData();
+  } catch(e) {
+    user = { id: null, prenom: prenomKey };
+    calcAll(); calcCouts();
+    setSyncError();
+  }
+  showApp();
+}
+
+function showApp() {
+  document.getElementById('screen-loading').classList.add('hidden');
+  document.getElementById('screen-app').style.display = 'block';
+  document.getElementById('avatar-btn').textContent = user.prenom.charAt(0).toUpperCase();
+  document.getElementById('header-name').textContent = 'Prépa & Livraison';
+  document.getElementById('header-sub').textContent = `Bonjour ${user.prenom} 👋`;
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function setSyncing() { document.getElementById('sync-dot').className='sync-dot saving'; document.getElementById('sync-label').textContent='Sauvegarde...'; }
+function setSynced() { document.getElementById('sync-dot').className='sync-dot'; document.getElementById('sync-label').textContent='Synchro ✓'; }
+function setSyncError() { document.getElementById('sync-dot').className='sync-dot error'; document.getElementById('sync-label').textContent='Hors ligne'; }
+
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function fmt(n,d=2) { return isNaN(n)?'—':n.toFixed(d); }
+function set(id, val, d=2) { const el=document.getElementById(id); if(el) el.textContent=(val===null||isNaN(val))?'—':(d===0?Math.round(val).toString():val.toFixed(d)); }
+
+function calcAll() {
+  const nbS=v('f-s-nb'), minS=v('f-s-min'), nbD=v('f-d-nb'), minD=v('f-d-min');
+  const nbL=v('f-l-nb'), charge=v('f-l-charge'), approche=v('f-l-approche'), rythme=v('f-l-rythme');
+  const hS=minS/60, totalS=hS*nbS;
+  set('c-s-h',hS,3); set('rs-total',totalS); document.getElementById('rs-sub').textContent=`${nbS} × ${fmt(hS,3)} h`; set('rs-par',hS,3);
+  const hD=minD/60, totalD=hD*nbD;
+  set('c-d-h',hD,3); set('rd-total',totalD); document.getElementById('rd-sub').textContent=`${nbD} × ${fmt(hD,3)} h`; set('rd-par',hD,3);
+  const mpl=rythme>0?60/rythme:0, tMin=charge+approche+(mpl*nbL*2), tH=tMin/60;
+  set('c-tournee',tMin,0); set('rl-total',tH); document.getElementById('rl-sub').textContent=`${nbL} sacs à ${rythme}/h`; set('rl-par',mpl,0);
+  const tp=totalS+totalD;
+  set('r-total',tp+tH); set('r-prepa',tp); set('r-liv',tH); document.getElementById('r-sacs').textContent=(nbS+nbD).toString();
+}
+
+function calcCouts() {
+  const p=v('c-prep')+v('c-enc-p')+v('c-remp');
+  const t=v('c-loyer')+v('c-rep')+v('c-gas')+v('c-perim')+v('c-tel')+v('c-chauf')+v('c-enc-t')+v('c-nav')+v('c-pal')+v('c-car');
+  const po=v('c-forf-r')+v('c-forf-u');
+  set('rc-prepa',p); set('rc-transport',t); set('rc-global',t+po+v('c-depr')); set('rc-poste',v('c-forf-r'));
+}
+
+function autoSave(table) {
+  clearTimeout(timers[table]); setSyncing();
+  timers[table] = setTimeout(() => save(table), 900);
+}
+
+async function save(table) {
+  if (!user?.id) return;
+  try {
+    if (table==='prepa') {
+      await sb(`preparation?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ sac_simple_nb:v('f-s-nb'), sac_simple_minutes:v('f-s-min'), sac_double_nb:v('f-d-nb'), sac_double_minutes:v('f-d-min'), updated_at:new Date().toISOString() }) });
+    } else if (table==='livraison') {
+      await sb(`livraison?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ nb_sacs_livres:v('f-l-nb'), temps_chargement_min:v('f-l-charge'), temps_approche_min:v('f-l-approche'), rythme_livraisons_heure:v('f-l-rythme'), cout_trajet_michelin:v('f-l-michelin'), taux_attribution:v('f-l-taux'), vehicule_type:document.getElementById('f-l-vehicule').value, updated_at:new Date().toISOString() }) });
+    } else if (table==='couts') {
+      await sb(`couts?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ preparateur:v('c-prep'), encadrement_prepa:v('c-enc-p'), remplacement:v('c-remp'), depreciation_plateforme:v('c-depr'), loyer_vehicule:v('c-loyer'), reparation_vehicule:v('c-rep'), gasoil_peage:v('c-gas'), perimetre_livraison:v('c-perim'), telephone:v('c-tel'), chauffeur:v('c-chauf'), encadrement_transport:v('c-enc-t'), navette_stg:v('c-nav'), palette:v('c-pal'), carton:v('c-car'), forfait_par_repas:v('c-forf-r'), forfait_point_unique:v('c-forf-u'), updated_at:new Date().toISOString() }) });
+    }
+    setSynced();
+  } catch(e) { setSyncError(); }
+}
+
+async function loadData() {
+  if (!user?.id) return;
+  const [pr, li, co] = await Promise.all([
+    sb(`preparation?user_id=eq.${user.id}&select=*`),
+    sb(`livraison?user_id=eq.${user.id}&select=*`),
+    sb(`couts?user_id=eq.${user.id}&select=*`)
+  ]);
+  if (pr?.[0]) { const p=pr[0]; if(p.sac_simple_nb!==null) document.getElementById('f-s-nb').value=p.sac_simple_nb; if(p.sac_simple_minutes!==null) document.getElementById('f-s-min').value=p.sac_simple_minutes; if(p.sac_double_nb!==null) document.getElementById('f-d-nb').value=p.sac_double_nb; if(p.sac_double_minutes!==null) document.getElementById('f-d-min').value=p.sac_double_minutes; }
+  if (li?.[0]) { const l=li[0]; if(l.nb_sacs_livres!==null) document.getElementById('f-l-nb').value=l.nb_sacs_livres; if(l.temps_chargement_min!==null) document.getElementById('f-l-charge').value=l.temps_chargement_min; if(l.temps_approche_min!==null) document.getElementById('f-l-approche').value=l.temps_approche_min; if(l.rythme_livraisons_heure!==null) document.getElementById('f-l-rythme').value=l.rythme_livraisons_heure; if(l.cout_trajet_michelin!==null) document.getElementById('f-l-michelin').value=l.cout_trajet_michelin; if(l.taux_attribution!==null) document.getElementById('f-l-taux').value=l.taux_attribution; if(l.vehicule_type) document.getElementById('f-l-vehicule').value=l.vehicule_type; }
+  if (co?.[0]) { const c=co[0]; const m={'c-prep':'preparateur','c-enc-p':'encadrement_prepa','c-remp':'remplacement','c-depr':'depreciation_plateforme','c-loyer':'loyer_vehicule','c-rep':'reparation_vehicule','c-gas':'gasoil_peage','c-perim':'perimetre_livraison','c-tel':'telephone','c-chauf':'chauffeur','c-enc-t':'encadrement_transport','c-nav':'navette_stg','c-pal':'palette','c-car':'carton','c-forf-r':'forfait_par_repas','c-forf-u':'forfait_point_unique'}; for(const[k,v] of Object.entries(m)) if(c[v]!==null) document.getElementById(k).value=c[v]; }
+  calcAll(); calcCouts(); setSynced();
+}
+
+function openModal() { document.getElementById('modal-prenom').value=user?.prenom||''; document.getElementById('modal-overlay').classList.add('show'); }
+function closeModalOutside(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+function closeModal() { document.getElementById('modal-overlay').classList.remove('show'); }
+async function changePrenom() {
+  const p = document.getElementById('modal-prenom').value.trim();
+  if (!p) return;
+  const prenomKey = p.toLowerCase();
+  localStorage.setItem('_prenom', prenomKey);
+  closeModal();
+  showToast('Changement en cours...');
+  await boot(prenomKey);
+}
+
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+
+// INIT
+const savedPrenom = localStorage.getItem('_prenom');
+if (savedPrenom) { boot(savedPrenom); }
+</script>
+</body>
+</html>
