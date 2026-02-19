@@ -76,7 +76,7 @@
       background: var(--white);
       border-top: 1px solid var(--border);
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
     .tab-btn {
@@ -215,16 +215,16 @@
     <!-- SAC SIMPLE -->
     <div class="tab-content active" id="tab-simple">
       <div class="card">
-        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
+        <div class="card-header"><div class="card-title">📊 Résultat global</div><div class="card-badge">Calculé auto</div></div>
         <div class="recap-grid">
-          <div class="recap-cell"><div class="recap-label">Total prépa</div><div class="recap-value blue" id="rs-total">—</div><div class="recap-unit">heures</div></div>
-          <div class="recap-cell"><div class="recap-label">Par sac</div><div class="recap-value green" id="rs-par">—</div><div class="recap-unit">heure / sac</div></div>
-          <div class="recap-cell"><div class="recap-label">Nombre de sacs</div><div class="recap-value" id="rs-nb-display">—</div><div class="recap-unit">sacs simples</div></div>
-          <div class="recap-cell"><div class="recap-label">Temps / sac</div><div class="recap-value orange" id="c-s-h">—</div><div class="recap-unit">h / sac</div></div>
+          <div class="recap-cell"><div class="recap-label">Prépa totale</div><div class="recap-value blue" id="rs-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Livraison totale</div><div class="recap-value orange" id="rs-liv-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Nb sacs</div><div class="recap-value" id="rs-nb-display">—</div><div class="recap-unit">sacs simples</div></div>
+          <div class="recap-cell"><div class="recap-label">Total général</div><div class="recap-value green" id="rs-grand-total">—</div><div class="recap-unit">heures</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title">🛍 Sac simple — Paramètres</div></div>
+        <div class="card-header"><div class="card-title">🛍 Préparation</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs simples</div><div class="field-sub">Quantité à préparer</div></div>
           <div class="field-right"><input type="number" id="f-s-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
@@ -233,22 +233,49 @@
           <div class="field-left"><div class="field-label">Temps par sac</div><div class="field-sub">En minutes</div></div>
           <div class="field-right"><input type="number" id="f-s-min" value="10" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
         </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps / sac</div><div class="field-sub">Calculé auto</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-s-h">—</div><div class="calc-unit">h / sac</div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
+          <div class="field-right"><input type="number" id="f-l-nb" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
+          <div class="field-right"><input type="number" id="f-l-charge" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
+          <div class="field-right"><input type="number" id="f-l-approche" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
+          <div class="field-right"><input type="number" id="f-l-rythme" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Durée tournée</div><div class="field-sub">Calculé auto</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-tournee-s">—</div><div class="calc-unit">min</div></div></div>
+        </div>
       </div>
     </div>
 
     <!-- SAC DOUBLE -->
     <div class="tab-content" id="tab-double">
       <div class="card">
-        <div class="card-header"><div class="card-title">📊 Résultat</div><div class="card-badge">Calculé auto</div></div>
+        <div class="card-header"><div class="card-title">📊 Résultat global</div><div class="card-badge">Calculé auto</div></div>
         <div class="recap-grid">
-          <div class="recap-cell"><div class="recap-label">Total prépa</div><div class="recap-value blue" id="rd-total">—</div><div class="recap-unit">heures</div></div>
-          <div class="recap-cell"><div class="recap-label">Par sac</div><div class="recap-value green" id="rd-par">—</div><div class="recap-unit">heure / sac</div></div>
-          <div class="recap-cell"><div class="recap-label">Nombre de sacs</div><div class="recap-value" id="rd-nb-display">—</div><div class="recap-unit">sacs doubles</div></div>
-          <div class="recap-cell"><div class="recap-label">Temps / sac</div><div class="recap-value orange" id="c-d-h">—</div><div class="recap-unit">h / sac</div></div>
+          <div class="recap-cell"><div class="recap-label">Prépa totale</div><div class="recap-value blue" id="rd-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Livraison totale</div><div class="recap-value orange" id="rd-liv-total">—</div><div class="recap-unit">heures</div></div>
+          <div class="recap-cell"><div class="recap-label">Nb sacs</div><div class="recap-value" id="rd-nb-display">—</div><div class="recap-unit">sacs doubles</div></div>
+          <div class="recap-cell"><div class="recap-label">Total général</div><div class="recap-value green" id="rd-grand-total">—</div><div class="recap-unit">heures</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header"><div class="card-title">🛍🛍 Sac double — Paramètres</div></div>
+        <div class="card-header"><div class="card-title">🛍🛍 Préparation</div></div>
         <div class="field-row">
           <div class="field-left"><div class="field-label">Nombre de sacs doubles</div><div class="field-sub">Quantité à préparer</div></div>
           <div class="field-right"><input type="number" id="f-d-nb" value="10" min="0" oninput="calcAll();autoSave('prepa')"><div class="field-unit">sacs</div></div>
@@ -256,6 +283,33 @@
         <div class="field-row">
           <div class="field-left"><div class="field-label">Temps par sac double</div><div class="field-sub">En minutes</div></div>
           <div class="field-right"><input type="number" id="f-d-min" value="15" min="0" step="0.5" oninput="calcAll();autoSave('prepa')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps / sac</div><div class="field-sub">Calculé auto</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-d-h">—</div><div class="calc-unit">h / sac</div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🚚 Livraison</div></div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Nombre de sacs livrés</div></div>
+          <div class="field-right"><input type="number" id="f-l-nb-d" value="52" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">sacs</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps de chargement</div><div class="field-sub">Mise en camion</div></div>
+          <div class="field-right"><input type="number" id="f-l-charge-d" value="30" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Temps d'approche</div><div class="field-sub">Trajet aller</div></div>
+          <div class="field-right"><input type="number" id="f-l-approche-d" value="40" min="0" oninput="calcAll();autoSave('livraison')"><div class="field-unit">min</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Rythme de livraison</div><div class="field-sub">Livraisons par heure</div></div>
+          <div class="field-right"><input type="number" id="f-l-rythme-d" value="4" min="0.5" step="0.5" oninput="calcAll();autoSave('livraison')"><div class="field-unit">/ h</div></div>
+        </div>
+        <div class="field-row">
+          <div class="field-left"><div class="field-label">Durée tournée</div><div class="field-sub">Calculé auto</div></div>
+          <div class="field-right"><div class="calc-box"><div class="calc-value" id="c-tournee-d">—</div><div class="calc-unit">min</div></div></div>
         </div>
       </div>
     </div>
@@ -359,10 +413,6 @@
     <button class="tab-btn" id="btn-double" onclick="switchTab('double',this)">
       <span class="tab-icon">🛍🛍</span>
       Sac double
-    </button>
-    <button class="tab-btn" id="btn-livraison" onclick="switchTab('livraison',this)">
-      <span class="tab-icon">🚚</span>
-      Livraison
     </button>
     <button class="tab-btn" id="btn-couts" onclick="switchTab('couts',this)">
       <span class="tab-icon">💶</span>
@@ -531,7 +581,10 @@ async function save(table) {
     if (table==='prepa') {
       await sb(`preparation?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ sac_simple_nb:v('f-s-nb'), sac_simple_minutes:v('f-s-min'), sac_double_nb:v('f-d-nb'), sac_double_minutes:v('f-d-min'), updated_at:new Date().toISOString() }) });
     } else if (table==='livraison') {
-      await sb(`livraison?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ nb_sacs_livres:v('f-l-nb'), temps_chargement_min:v('f-l-charge'), temps_approche_min:v('f-l-approche'), rythme_livraisons_heure:v('f-l-rythme'), cout_trajet_michelin:v('f-l-michelin'), taux_attribution:v('f-l-taux'), vehicule_type:document.getElementById('f-l-vehicule').value, updated_at:new Date().toISOString() }) });
+      await sb(`livraison?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({
+        nb_sacs_livres:v('f-l-nb'), temps_chargement_min:v('f-l-charge'), temps_approche_min:v('f-l-approche'), rythme_livraisons_heure:v('f-l-rythme'),
+        nb_sacs_livres_double:v('f-l-nb-d'), temps_chargement_min_double:v('f-l-charge-d'), temps_approche_min_double:v('f-l-approche-d'), rythme_livraisons_heure_double:v('f-l-rythme-d'),
+        updated_at:new Date().toISOString() }) });
     } else if (table==='couts') {
       await sb(`couts?user_id=eq.${user.id}`, { method:'PATCH', body: JSON.stringify({ preparateur:v('c-prep'), encadrement_prepa:v('c-enc-p'), remplacement:v('c-remp'), depreciation_plateforme:v('c-depr'), loyer_vehicule:v('c-loyer'), reparation_vehicule:v('c-rep'), gasoil_peage:v('c-gas'), perimetre_livraison:v('c-perim'), telephone:v('c-tel'), chauffeur:v('c-chauf'), encadrement_transport:v('c-enc-t'), navette_stg:v('c-nav'), palette:v('c-pal'), carton:v('c-car'), forfait_par_repas:v('c-forf-r'), forfait_point_unique:v('c-forf-u'), updated_at:new Date().toISOString() }) });
     }
@@ -547,7 +600,16 @@ async function loadData() {
     sb(`couts?user_id=eq.${user.id}&select=*`)
   ]);
   if (pr?.[0]) { const p=pr[0]; if(p.sac_simple_nb!==null) document.getElementById('f-s-nb').value=p.sac_simple_nb; if(p.sac_simple_minutes!==null) document.getElementById('f-s-min').value=p.sac_simple_minutes; if(p.sac_double_nb!==null) document.getElementById('f-d-nb').value=p.sac_double_nb; if(p.sac_double_minutes!==null) document.getElementById('f-d-min').value=p.sac_double_minutes; }
-  if (li?.[0]) { const l=li[0]; if(l.nb_sacs_livres!==null) document.getElementById('f-l-nb').value=l.nb_sacs_livres; if(l.temps_chargement_min!==null) document.getElementById('f-l-charge').value=l.temps_chargement_min; if(l.temps_approche_min!==null) document.getElementById('f-l-approche').value=l.temps_approche_min; if(l.rythme_livraisons_heure!==null) document.getElementById('f-l-rythme').value=l.rythme_livraisons_heure; if(l.cout_trajet_michelin!==null) document.getElementById('f-l-michelin').value=l.cout_trajet_michelin; if(l.taux_attribution!==null) document.getElementById('f-l-taux').value=l.taux_attribution; if(l.vehicule_type) document.getElementById('f-l-vehicule').value=l.vehicule_type; }
+  if (li?.[0]) { const l=li[0];
+    if(l.nb_sacs_livres!==null) document.getElementById('f-l-nb').value=l.nb_sacs_livres;
+    if(l.temps_chargement_min!==null) document.getElementById('f-l-charge').value=l.temps_chargement_min;
+    if(l.temps_approche_min!==null) document.getElementById('f-l-approche').value=l.temps_approche_min;
+    if(l.rythme_livraisons_heure!==null) document.getElementById('f-l-rythme').value=l.rythme_livraisons_heure;
+    if(l.nb_sacs_livres_double!==null) document.getElementById('f-l-nb-d').value=l.nb_sacs_livres_double;
+    if(l.temps_chargement_min_double!==null) document.getElementById('f-l-charge-d').value=l.temps_chargement_min_double;
+    if(l.temps_approche_min_double!==null) document.getElementById('f-l-approche-d').value=l.temps_approche_min_double;
+    if(l.rythme_livraisons_heure_double!==null) document.getElementById('f-l-rythme-d').value=l.rythme_livraisons_heure_double;
+  }
   if (co?.[0]) { const c=co[0]; const m={'c-prep':'preparateur','c-enc-p':'encadrement_prepa','c-remp':'remplacement','c-depr':'depreciation_plateforme','c-loyer':'loyer_vehicule','c-rep':'reparation_vehicule','c-gas':'gasoil_peage','c-perim':'perimetre_livraison','c-tel':'telephone','c-chauf':'chauffeur','c-enc-t':'encadrement_transport','c-nav':'navette_stg','c-pal':'palette','c-car':'carton','c-forf-r':'forfait_par_repas','c-forf-u':'forfait_point_unique'}; for(const[k,v] of Object.entries(m)) if(c[v]!==null) document.getElementById(k).value=c[v]; }
   calcAll(); calcCouts(); setSynced();
 }
